@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
-import { LineState } from "./models";
+import { LineState } from './models';
 
 export const isInOutBalance = (str: string) => {
   // must start with dot or number & next chars must be number, dot, comma, plus sign, minus sign
