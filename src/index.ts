@@ -5,13 +5,13 @@ import {
   parseLine, splitInOutBalance,
 } from './helpers';
 import {
-  AccountModel, TransactionValueModel, TranscationModel,
+  AccountModel, TransactionValueModel, TransactionModel,
 } from './models';
 
 // Copy the whole content of maybank statement
 // Paste inside a file (example filename: `sept_2020`)
 
-const transactions: TranscationModel[] = [];
+const transactions: TransactionModel[] = [];
 
 // Read the file contents
 const fileContent: string = readFileSync(path.join(__dirname, '../pdfToText/2021_09.txt')).toString();

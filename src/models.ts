@@ -7,7 +7,7 @@ export interface AccountModel {
   }
 }
 
-export interface TranscationModel {
+export interface TransactionModel {
   account: AccountModel
   date: Date
   // integer & cents
