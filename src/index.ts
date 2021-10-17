@@ -2,10 +2,10 @@ import { readFileSync } from 'fs';
 import { parse as dateParse, format as dateFormat } from 'date-fns';
 import path from 'path';
 import {
-  isDate, isDescription, isFullDate, isInOutBalance, splitInOutBalance,
+  parseLine, splitInOutBalance,
 } from './helpers';
 import {
-  AccountModel, LineState, TransactionValueModel, TranscationModel,
+  AccountModel, TransactionValueModel, TranscationModel,
 } from './models';
 
 // Copy the whole content of maybank statement
@@ -16,45 +16,6 @@ const transactions: TranscationModel[] = [];
 // Read the file contents
 const fileContent: string = readFileSync(path.join(__dirname, '../pdfToText/2021_09.txt')).toString();
 const fileContentLineByLine: string[] = fileContent.split(/\r?\n/);
-
-const parseLine = (str: string): { lineState: LineState, data: any } => {
-  if (isInOutBalance(str)) {
-    // console.log(str);
-    return {
-      lineState: 'money',
-      data: str,
-    };
-  }
-
-  if (isDate(str)) {
-    // console.log(str);
-    return {
-      lineState: 'date',
-      data: str,
-    };
-  }
-
-  if (isDescription(str)) {
-    // console.log(str);
-    return {
-      lineState: 'desc',
-      data: str,
-    };
-  }
-
-  if (isFullDate(str)) {
-    // console.log(str);
-    return {
-      lineState: 'full_date',
-      data: str,
-    };
-  }
-
-  return {
-    lineState: undefined,
-    data: str,
-  };
-};
 
 // let lineState:LineState;
 let currLineIndex = 0;
@@ -204,25 +165,3 @@ transactions.forEach(({
 
   console.log(`${formattedDate},"${income}","${outgoing}","${formattedBalance}",${description},${moreDetail}`);
 });
-
-// console.log();
-
-// fixedDates.forEach((ds, idx) => {
-//   // bal:   ${transactionValues[idx].balance}
-//   // value: ${transactionValues[idx].value}
-//   // type:  ${transactionValues[idx].type}
-//   console.log(`
-//     ${ds}
-//     value: ${fixedInOut[idx].value}
-//     type:  ${fixedInOut[idx].type}
-//     bal:   ${fixedBalance[idx]}
-//     desc:  ${fixedDescription[idx]}`);
-//   moreDetails[idx].forEach((element) => {
-//     console.log(element);
-//   });
-// });
-
-// console.log();
-// console.log(`
-//   year: ${year}
-// `);

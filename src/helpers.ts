@@ -1,5 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
+import { LineState } from "./models";
+
 export const isInOutBalance = (str: string) => {
   // must start with dot or number & next chars must be number, dot, comma, plus sign, minus sign
   if (!/^[0-9.][0-9.,+\- ]*$/.test(str)) {
@@ -77,5 +79,44 @@ export const splitInOutBalance = (str: string): { inOut: string, balance:string 
   return {
     inOut: '',
     balance: inOut,
+  };
+};
+
+export const parseLine = (str: string): { lineState: LineState, data: any } => {
+  if (isInOutBalance(str)) {
+    // console.log(str);
+    return {
+      lineState: 'money',
+      data: str,
+    };
+  }
+
+  if (isDate(str)) {
+    // console.log(str);
+    return {
+      lineState: 'date',
+      data: str,
+    };
+  }
+
+  if (isDescription(str)) {
+    // console.log(str);
+    return {
+      lineState: 'desc',
+      data: str,
+    };
+  }
+
+  if (isFullDate(str)) {
+    // console.log(str);
+    return {
+      lineState: 'full_date',
+      data: str,
+    };
+  }
+
+  return {
+    lineState: undefined,
+    data: str,
   };
 };
