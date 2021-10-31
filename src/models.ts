@@ -14,7 +14,7 @@ export interface TransactionModel {
   value: number
   // integer & cents
   balance: number
-  type: 'income' | 'outgoing'
+  type: 'income' | 'outgoing' | 'brought-forward' | 'carried-forward'
   description: string
   moreDetail: string
 }
@@ -22,7 +22,14 @@ export interface TransactionModel {
 export type LineState = 'money' | 'date' | 'desc' | 'detail' | 'full_date' | undefined;
 
 export interface TransactionValueModel {
-  value: number,
-  type: 'income' | 'outgoing',
+  value: number
+  // Brought forward is starting balance take from previous
+  // Carried forward is end balance that will be brought forward
+  type: 'income' | 'outgoing' | 'brought-forward' | 'carried-forward'
   balance?: number
 }
+
+export type TransactionDescription = {
+  text: string
+  index: number
+};
