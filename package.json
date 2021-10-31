@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
+  "bin": "dist/cli.js",
   "keywords": [],
   "author": "Fakhrullah Padzil",
   "license": "ISC",
