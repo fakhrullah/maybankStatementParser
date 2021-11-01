@@ -1,6 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 
-import { LineState } from './models';
+import { parse as parseDate } from 'date-fns';
+import {
+  LineState, TransactionDescription, TransactionValueModel,
+} from './models';
 
 export const isInOutBalance = (str: string) => {
   // must start with dot or number & next chars must be number, dot, comma, plus sign, minus sign
@@ -34,22 +37,60 @@ export const isDate = (str: string) => {
   return true;
 };
 
-export const isDescription = (str: string) => {
-  const lowerCaseStr = str.toLowerCase();
-  // if (
-  //   !lowerCaseStr.includes('to a/c')
-  //   || !lowerCaseStr.includes('fr a/c')
-  // ) return false;
+export const confirmedTransaction = (str: string): { data: string, isConfirmed: boolean } => {
+  const maybankTransactionDesc: string[] = [
+    'TRANSFER TO A/C',
+    'BEGINNING BALANCE',
+    'ACTIVATE ACCOUNT',
+    'TRANSFER FR A/C',
+    'INTER-BANK PAYMENT INTO A/C',
+  ];
 
-  if (!lowerCaseStr.includes('a/c')) {
+  const confirmedDesc: boolean = maybankTransactionDesc.reduce<boolean>((acc, curr) => {
+    if (acc) return true;
+    if (str.toLowerCase().includes(curr.toLowerCase())) return true;
     return false;
+  }, false);
+
+  if (confirmedDesc) {
+    return {
+      data: str,
+      isConfirmed: true,
+    };
   }
 
-  // if (/.*[a-z].*/.test(str)) { return false; }
+  return {
+    data: str,
+    isConfirmed: false,
+  };
+};
+
+export const isDescription = (str: string) => {
+  const lowerCaseStr = str.toLowerCase();
 
   if (str !== str.toUpperCase()) { return false; }
 
-  return true;
+  // List Maybank transaction description
+  const maybankTransactionDesc: string[] = [
+    'TRANSFER TO A/C',
+    'BEGINNING BALANCE',
+    'ACTIVATE ACCOUNT',
+    'TRANSFER FR A/C',
+    'IBG PAYMENT INTO A/C',
+  ];
+
+  const confirmedDesc: boolean = maybankTransactionDesc.reduce<boolean>((acc, curr) => {
+    if (acc) return true;
+    if (lowerCaseStr.includes(curr.toLowerCase())) return true;
+    return false;
+  }, false);
+
+  if (confirmedDesc) return true;
+
+  if (lowerCaseStr.includes('fr a/c')) return true;
+  if (lowerCaseStr.includes('to a/c')) return true;
+
+  return false;
 };
 
 export const isFullDate = (str: string) => {
@@ -123,3 +164,38 @@ export const parseLine = (str: string): { lineState: LineState, data: any } => {
 
 export const convertStringRmToCents = (stringRM: string): number => parseInt(stringRM.replace(',', '').replace('.', ''), 10);
 
+export const isPerfectAlign = (
+  dates: string[],
+  descriptions: TransactionDescription[],
+  transactionsValues: TransactionValueModel[],
+):{ isAlign: boolean, errors?: string[] } => {
+  const errors: string[] = [];
+  // console.log(dates);
+  // console.log(descriptions);
+  // console.log(transactionsValues);
+
+  if (dates.length !== descriptions.length) {
+    const comparisonText = dates.length > descriptions.length ? 'more than' : 'less than';
+    errors.push(`Dates length is ${comparisonText} descriptions length`);
+  }
+
+  if (descriptions.length !== transactionsValues.length) {
+    const comparisonText = descriptions.length > transactionsValues.length ? 'more than' : 'less than';
+    errors.push(`Descriptions length is ${comparisonText} transactionsValues`);
+  }
+
+  if (dates.length !== transactionsValues.length) {
+    const comparisonText = dates.length > transactionsValues.length ? 'more than' : 'less than';
+    errors.push(`Dates length is ${comparisonText} transactionValues`);
+  }
+
+  if (errors.length > 0) {
+    return { isAlign: false, errors };
+  }
+
+  return { isAlign: true };
+};
+
+export const stringToDate = (
+  dateStr: string,
+): Date => parseDate(dateStr, 'dd/MM/yyyy', new Date());
