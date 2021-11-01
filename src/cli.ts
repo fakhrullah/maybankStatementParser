@@ -1,3 +1,4 @@
+import logger from './logger';
 import { TransactionModel } from './models';
 import { formatOutput } from './output-formatter';
 import { parseContent } from './parser';
@@ -12,27 +13,19 @@ const processPipedData = () => {
   });
 
   stdin.on('end', () => {
-    console.log('end');
+    logger.debug('END');
     const transactions: TransactionModel[] = parseContent(data);
     const output: string = formatOutput(transactions, 'csv');
-    console.log(output);
+    logger.debug(output);
   });
 
   stdin.on('error', (error) => {
-    console.log(error);
+    logger.error(error);
   });
 };
 
 if (stdin.isTTY) {
-  console.log('Set the `--file` argument');
+  logger.error('Set the `--file` argument');
 } else {
   processPipedData();
 }
-
-// output format CSV
-// output format JSON
-
-// output file
-// output console.log
-
-// console.log(output);
