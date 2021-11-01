@@ -1,4 +1,5 @@
 import {
+  convertStringRmToCents,
   isDate, isDescription, isFullDate, isInOutBalance,
 } from './helpers';
 
@@ -77,6 +78,14 @@ describe('isDescription', () => {
   test('should return true for string contain "fr a/c', () => {
     expect(isDescription('TRANSFER FR A/C')).toBe(true);
   });
+
+  test('should return true for "ACTIVATE ACCOUNT"', () => {
+    expect(isDescription('ACTIVATE ACCOUNT')).toBe(true);
+  });
+
+  test('should return true for "BEGINNING BALANCE"', () => {
+    expect(isDescription('BEGINNING BALANCE')).toBe(true);
+  });
 });
 
 describe('isFullDate', () => {
@@ -90,5 +99,19 @@ describe('isFullDate', () => {
 
   test('should false when contain long text "01/10/20, ALL REFERENCES TO"', () => {
     expect(isFullDate('01/10/20, ALL REFERENCES TO')).toBe(false);
+  });
+});
+
+describe('convertStringRmToCents', () => {
+  test('should return 1234560 for 12,345.60', () => {
+    expect(convertStringRmToCents('12,345.60')).toEqual(1234560);
+  });
+
+  test('should return 34200 for 342.00', () => {
+    expect(convertStringRmToCents('342.00')).toEqual(34200);
+  });
+
+  test('should return 0 for .00', () => {
+    expect(convertStringRmToCents('.00')).toEqual(0);
   });
 });

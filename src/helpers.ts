@@ -120,3 +120,6 @@ export const parseLine = (str: string): { lineState: LineState, data: any } => {
     data: str,
   };
 };
+
+export const convertStringRmToCents = (stringRM: string): number => parseInt(stringRM.replace(',', '').replace('.', ''), 10);
+
