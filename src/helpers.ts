@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import { parse as parseDate } from 'date-fns';
+import logger from './logger';
 import {
   LineState, TransactionDescription, TransactionValueModel,
 } from './models';
@@ -125,7 +126,7 @@ export const splitInOutBalance = (str: string): { inOut: string, balance:string 
 
 export const parseLine = (str: string): { lineState: LineState, data: any } => {
   if (isInOutBalance(str)) {
-    // console.log(str);
+    logger.debug(str);
     return {
       lineState: 'money',
       data: str,
