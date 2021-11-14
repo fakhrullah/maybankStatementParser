@@ -134,3 +134,5 @@ export const parseContent = (str: string): TransactionModel[] => {
 
   return fixedTransactions;
 };
+
+export const parser = parseContent;

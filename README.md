@@ -2,7 +2,7 @@
 
 This will parse your Maybank statement to JSON or CSV.
 
-> **Notes:** I use this on my Maybank current account (Akaun semasa)
+> **Notes:** I use this on my Maybank current account (Akaun semasa) with monthtly statement file
 > AND my account not that much active.
 > If you have any problem, please open and issue, I will try to solve it.
 
@@ -34,3 +34,20 @@ Print output format in JSON or CSV. Default format csv will be print.
 `--output='path_to_file/filename'`
 Create file for the output instead of print it on terminal. File extension `.csv` or `.json` will be added depend on `--format` arguments.
 Default is `.csv`.
+
+
+## Using package
+
+```javascript
+import {parser} from maybankStatementParser;
+
+const fileContents = fs.readFileSync('maybank-statements-june.txt');
+const maybankStatementData = parser(fileContents);
+
+console.log(maybankStatementData)
+// {statements: [{type: 'income', ...}, ...]}
+```
+
+## Known problems
+
+* Only working with monthly statements file.
