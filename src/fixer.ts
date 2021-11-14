@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 
 import { confirmedTransaction, isDate } from './helpers';
+import logger from './logger';
 import { TransactionValueModel } from './models';
 
 export const fixDescriptions = (descriptions: string[], dates: string[]): string[] => {
@@ -51,7 +52,7 @@ export const fixTransactions = (
     .filter((trans) => trans.balance !== 0)
     .map((trans) => trans.balance || 0);
   const uniqueBalancesFromData: number[] = Array.from(new Set(balancesFromData));
-  console.log(uniqueBalancesFromData);
+  logger.debug(uniqueBalancesFromData);
 
   const balancesFromCalculation: number[] = [];
 
@@ -70,7 +71,7 @@ export const fixTransactions = (
       );
     }
   });
-  console.log(balancesFromCalculation);
+  logger.debug(balancesFromCalculation);
 
   // Validate fixedTransactions
 
