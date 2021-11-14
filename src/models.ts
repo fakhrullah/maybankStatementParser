@@ -16,7 +16,7 @@ export interface TransactionModel {
   balance: number
   type: 'income' | 'outgoing' | 'brought-forward' | 'carried-forward'
   description: string
-  moreDetail: string
+  moreDetail: string[]
 }
 
 export type LineState = 'money' | 'date' | 'desc' | 'detail' | 'full_date' | undefined;

@@ -24,7 +24,7 @@ const convertToCSV = (transactions: TransactionModel[]):string => {
     // const formattedBalance = numFormat.format(balance / 100);
     const formattedBalance: number = balance / 100;
 
-    const line = `${formattedDate},"${currencyFormat.format(income)}","${currencyFormat.format(outgoing)}","${currencyFormat.format(formattedBalance)}",${description},${moreDetail}`;
+    const line = `${formattedDate},"${currencyFormat.format(income)}","${currencyFormat.format(outgoing)}","${currencyFormat.format(formattedBalance)}",${description},${moreDetail.join(', ')}`;
     output.push(line);
   });
 

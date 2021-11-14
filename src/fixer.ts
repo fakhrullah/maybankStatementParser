@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 
-import { confirmedTransaction } from './helpers';
+import { confirmedTransaction, isDate } from './helpers';
 import { TransactionValueModel } from './models';
 
 export const fixDescriptions = (descriptions: string[], dates: string[]): string[] => {
@@ -81,4 +81,24 @@ export const fixTransactions = (
   }
 
   return fixedTransactions;
+};
+
+export const fixMoreDetails = (moreDetails: string[][]): string[][] => {
+  const fixedMoreDetails: string[][] = moreDetails.map((detail) => {
+    if (detail.length > 3) {
+      let fixedDetail: string[] = [];
+      const idxOfStatementBalanceRowTitle = detail.findIndex((str) => str.toLowerCase().includes('statement balance'));
+      const idxOfFirstDate = detail.findIndex((str) => isDate(str));
+
+      if (idxOfFirstDate) {
+        fixedDetail = [...fixedDetail, ...detail.slice(0, idxOfFirstDate)];
+      }
+      if (idxOfStatementBalanceRowTitle !== -1) {
+        fixedDetail = [...fixedDetail, ...detail.slice(idxOfStatementBalanceRowTitle + 1)];
+      }
+      return fixedDetail;
+    }
+    return detail;
+  });
+  return fixedMoreDetails;
 };

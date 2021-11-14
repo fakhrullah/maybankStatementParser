@@ -1,9 +1,10 @@
 /* eslint-disable import/prefer-default-export */
-import { fixDescriptions, fixTransactions } from './fixer';
+import { fixDescriptions, fixMoreDetails, fixTransactions } from './fixer';
 import {
   convertStringRmToCents, isPerfectAlign, parseLine,
   splitInOutBalance, stringToDate,
 } from './helpers';
+import logger from './logger';
 import { TransactionDescription, TransactionModel, TransactionValueModel } from './models';
 
 type UsableLines = {
@@ -11,6 +12,7 @@ type UsableLines = {
   year: string
   descriptions: TransactionDescription[]
   transactionsValue: TransactionValueModel[]
+  moreDetails: string[][]
 };
 /**
  * First line parser to get related lines
@@ -69,11 +71,24 @@ const initialParser = (lines: string[]): UsableLines => {
     currLineIndex += 1;
   }
 
+  const moreDetails: string[][] = descriptions.map((desc, idx) => {
+    const startIdx = desc.index + 1;
+    let endIdx;
+    if (idx === descriptions.length - 1) {
+      endIdx = startIdx + 5;
+    } else {
+      endIdx = descriptions[idx + 1].index;
+    }
+
+    return lines.slice(startIdx, endIdx);
+  });
+
   return {
     dates: [`01/${month}`, ...datesStr],
     year,
     descriptions,
     transactionsValue: transactions,
+    moreDetails,
   };
 };
 
@@ -87,20 +102,20 @@ export const parseContent = (str: string): TransactionModel[] => {
 
   // loop & process array index by index
   const {
-    dates, year, descriptions, transactionsValue,
+    dates, year, descriptions, transactionsValue, moreDetails,
   } = initialParser(fileContentLineByLine);
 
-  console.log(dates);
-  console.log(year);
-  console.log(descriptions);
-  console.log(transactionsValue);
+  logger.debug(dates);
+  logger.debug(year);
+  logger.debug(descriptions);
+  logger.debug(transactionsValue);
 
   // Validate data
   const validateDataSync = isPerfectAlign(dates, descriptions, transactionsValue);
 
   // Fixing data based on length - dates, descriptions &
   if (!validateDataSync.isAlign) {
-    validateDataSync.errors?.forEach((errorText) => console.log(errorText));
+    validateDataSync.errors?.forEach((errorText) => logger.error(errorText));
 
     fixedDescriptions = fixDescriptions(descriptions.map((desc) => desc.text), dates);
     // fixedDescriptions.push();
@@ -109,6 +124,9 @@ export const parseContent = (str: string): TransactionModel[] => {
 
   // Fix transactions
   const fixedTransactionsValue = fixTransactions(transactionsValue);
+
+  // Fix transactions detail
+  const fixedMoreDetails = fixMoreDetails(moreDetails);
 
   // Build transaction models
   dates.forEach((date, idx) => {
@@ -128,7 +146,7 @@ export const parseContent = (str: string): TransactionModel[] => {
       value: fixedTransactionsValue[idx].value,
       description: fixedDescriptions[idx],
       // moreDetail: moreDetails[idx],
-      moreDetail: 'moreDetails[idx]',
+      moreDetail: fixedMoreDetails[idx],
     });
   });
 
