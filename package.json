@@ -1,8 +1,9 @@
 {
-  "name": "maybankstatementtocsv",
+  "name": "maybank-statement-parser",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/parser.js",
+  "typings": "./dist/parser.d.ts",
   "scripts": {
     "test": "jest",
     "lint": "eslint ./src",
