@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { program } from 'commander';
 import { readFileSync, existsSync, writeFileSync } from 'fs';
 import logger from './logger';
@@ -36,7 +38,7 @@ const programRun = (data?: string) => {
 
   // Format transactions
   // validate format
-  let outputFormat: 'csv' | 'json' = format.toLowerCase();
+  let outputFormat: 'csv' | 'json' = format?.toLowerCase();
   if (outputFormat !== 'json') outputFormat = 'csv';
   const processedData = formatOutput(transactions, outputFormat);
 
