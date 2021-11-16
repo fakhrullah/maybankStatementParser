@@ -39,13 +39,48 @@ Default is `.csv`.
 ## Using package
 
 ```javascript
-import {parser} from maybankStatementParser;
+const fs = require('fs');
+const {parser} = require('maybank-statement-parser');
 
 const fileContents = fs.readFileSync('maybank-statements-june.txt');
-const maybankStatementData = parser(fileContents);
+const maybankStatementData = parser(fileContents.toString());
 
-console.log(maybankStatementData)
-// {statements: [{type: 'income', ...}, ...]}
+console.log(maybankStatementData);
+// [
+//   {
+//     account: {
+//          ...
+//     },
+//     date: 2021-05-31T16:00:00.000Z,
+//     type: 'brought-forward',
+//     balance: 109450,
+//     value: 0,
+//     description: 'BEGINNING BALANCE',
+//     moreDetail: []
+//   },
+//   {
+//     account: {
+//          ...
+//     },
+//     date: 2021-06-04T16:00:00.000Z,
+//     type: 'income',
+//     balance: 209450,
+//     value: 100000,
+//     description: 'TRANSFER TO A/C',
+//     moreDetail: [ 'NAME OF D*', 'More detail' ]
+//   },
+//   {
+//     account: {
+//          ...
+//     },
+//     date: 2021-06-10T16:00:00.000Z,
+//     type: 'income',
+//     balance: 236450,
+//     value: 27000,
+//     description: 'TRANSFER TO A/C',
+//     moreDetail: [ 'NAME OF D*', 'More detail' ]
+//   },
+// ]
 ```
 
 ## Known problems
