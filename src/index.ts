@@ -123,7 +123,7 @@ fixedDates.forEach((data, idx) => {
     type: fixedInOut[idx].type,
     value: fixedInOut[idx].value,
     balance: fixedBalance[idx],
-    moreDetail: fixedMoreDetails[idx]?.join(',') || '',
+    moreDetail: fixedMoreDetails[idx],
   });
 });
 
