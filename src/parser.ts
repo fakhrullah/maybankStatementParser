@@ -1,11 +1,14 @@
 /* eslint-disable import/prefer-default-export */
 import { fixDescriptions, fixMoreDetails, fixTransactions } from './fixer';
+import getAccountDetail from './getAccountDetail';
 import {
   convertStringRmToCents, isPerfectAlign, parseLine,
   splitInOutBalance, stringToDate,
 } from './helpers';
 import logger from './logger';
-import { TransactionDescription, TransactionModel, TransactionValueModel } from './models';
+import {
+  AccountModel, TransactionDescription, TransactionModel, TransactionValueModel,
+} from './models';
 
 type UsableLines = {
   dates: string[]
@@ -128,14 +131,12 @@ export const parseContent = (str: string): TransactionModel[] => {
   // Fix transactions detail
   const fixedMoreDetails = fixMoreDetails(moreDetails);
 
+  const account: AccountModel = getAccountDetail(fileContentLineByLine);
+
   // Build transaction models
   dates.forEach((date, idx) => {
     fixedTransactions.push({
-      account: {
-        isBank: true,
-        bank: { name: 'Maybank', number: '324325324' },
-        name: 'maybank-fajarhac-technology',
-      },
+      account,
       date: stringToDate(`${dates[idx]}/${year}`),
       // type: transactionsValue[idx].type,
       type: fixedTransactionsValue[idx].type,
