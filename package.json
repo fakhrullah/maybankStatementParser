@@ -12,7 +12,16 @@
     "cli": "node ./dist/cli.js"
   },
   "bin": "dist/cli.js",
-  "keywords": [],
+  "keywords": [
+    "maybank",
+    "maybank current saving account",
+    "maybank statement"
+  ],
+  "files": [
+    "dist",
+    "src",
+    "typings"
+  ],
   "author": "Fakhrullah Padzil",
   "license": "ISC",
   "devDependencies": {
