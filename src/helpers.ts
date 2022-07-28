@@ -108,13 +108,14 @@ export const isFullDate = (str: string) => {
 };
 
 export const splitInOutBalance = (str: string): { inOut: string, balance:string } => {
-  const [inOut, balance = ''] = str.split(' ');
+  const [inOut, balance = ''] = str.split(/[-|+]/);
+  const [sign] = str.match(/[-|+]/) || [];
 
   // inOut Money must have sign + or -
-  if (inOut.includes('+') || inOut.includes('-')) {
+  if (sign === '+' || sign === '-') {
     return {
-      inOut,
-      balance,
+      inOut: `${inOut}${sign}`,
+      balance: balance.trim(),
     };
   }
 
